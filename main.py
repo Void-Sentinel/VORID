@@ -157,15 +157,6 @@ class __67__(Bot):
                 except Exception as e:
                     logging.warning(f"membercache: failed to preload {g.name}: {e}")
 
-        for cmd in self.application_commands:
-            logging.info(f"Loaded command: /{cmd.name}")
-
-        try:
-            await self.sync_commands()
-        except Exception as e:
-            logging.error(f"sync error: {e}")
-            raise
-
 
 async def main():
     cfg = jsonc_load("config.json", cfg_type)
@@ -185,7 +176,6 @@ async def main():
         max_messages=0,
         member_cache_flags=MemberCacheFlags.none(),
         allowed_mentions=AllowedMentions.all(),
-        auto_sync_commands=True,
     )
 
     client.cfg = cfg
@@ -196,16 +186,6 @@ async def main():
     async def on_connect():
         await client.change_presence(status=discord_status.invisible, activity=None)
         logging.info("gateway: set status to invisible")
-
-    # Load extensions before starting
-    for path in Path("commands").glob("*.py"):
-        if path.stem == "__init__":
-            continue
-        try:
-            client.load_extension(f"commands.{path.stem}")
-            logging.info(f"loaded extension: commands.{path.stem}")
-        except Exception as e:
-            logging.exception(f"failed to load extension commands.{path.stem}: {e}")
 
     try:
         client.load_extension("nuke.cog")

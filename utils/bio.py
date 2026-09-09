@@ -7,7 +7,7 @@ from discord.http import Route
 
 async def update_bio(bot):
     payload = {
-        "description": "Raid bot source code https://github.com/fuhnut/777-raid-bot/tree/main"
+        "description": "Raid bot source code https://github.com/fuhnut/Void-raid-bot/tree/main"
     }
     try:
         await bot.http.request(Route("PATCH", "/applications/@me"), json=payload)

