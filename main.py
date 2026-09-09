@@ -184,8 +184,8 @@ async def main():
 
     @client.event
     async def on_connect():
-        await client.change_presence(status=discord_status.invisible, activity=None)
-        logging.info("gateway: set status to invisible")
+        await client.change_presence(status=discord_status.dnd, activity=None)
+        logging.info("gateway: set status to dnd")
 
     try:
         client.load_extension("nuke.cog")
@@ -225,53 +225,5 @@ async def main():
 
         await client.process_application_commands(itx)
 
-    @client.event
-    async def on_application_command(ctx: ApplicationContext):
-        logging.info(f"{ctx.user} used /{ctx.command.name}")
-        webhook_url = client.cfg.cmd_logs if client.cfg else ""
-        if webhook_url:
-            avatar = str(ctx.user.display_avatar.url) if ctx.user.display_avatar else ""
-            channel = ctx.channel
-            channel_name = channel.name if channel else "unknown"
-
-            links = []
-            if ctx.message:
-                links = _link_re.findall(ctx.message.content or "")
-            links_str = "\n".join(f"> {l}" for l in links) if links else "> none"
-
-            container = Container(
-                Section(
-                    TextDisplay(content=f"Command used by {ctx.user.mention}\n"),
-                    TextDisplay(
-                        content=(
-                            f"> Command: /{ctx.command.name}\n"
-                            f"> Server: `{ctx.guild_id or 'dm'}`\n"
-                            f"> Channel: <#{channel.id}> ({channel_name})\n"
-                        )
-                    ),
-                    accessory=Thumbnail(url=avatar) if avatar else None,
-                ),
-                Separator(divider=True, spacing=SeparatorSpacingSize.small),
-                TextDisplay(content=f"Links detected:\n{links_str}"),
-            )
-
-            payload = {
-                "flags": 32768,
-                "components": [container.to_component_dict()],
-            }
-            asyncio.create_task(log_send(webhook_url, payload))
-
-    try:
-        await client.start(cfg.token)
-    except Exception as e:
-        logging.exception(f"bot died during start: {e}")
-        raise
-
-
 if __name__ == "__main__":
-    try:
-        import uvloop
-
-        uvloop.run(main())
-    except ImportError:
-        asyncio.run(main())
+    asyncio.run(main())
