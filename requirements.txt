@@ -1,0 +1,9 @@
+py-cord[speed] @ git+https://github.com/Pycord-Development/pycord
+msgspec
+psutil
+coloredlogs
+zstandard
+orjson>=3.11.9
+regex>=2026.5.9
+uvloop; platform_system != "Windows"
+aiohttp[speedups]
